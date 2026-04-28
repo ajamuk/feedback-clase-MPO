@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback de Clase — CrossFit Metropolitano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #87B15F;
+    --black: #121212;
+    --surface: #1c1c1c;
+    --surface2: #252525;
+    --border: rgba(255,255,255,0.08);
+    --text: #EEE9E9;
+    --muted: #888;
+    --hint: #555;
+    --argent: #C4C0BF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 90px;
+  }
+  header {
+    padding: 22px 20px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mark {
+    width: 30px; height: 30px;
+    background: var(--green);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .mark svg { width: 16px; height: 16px; fill: var(--black); }
+  header h1 { font-size: 15px; font-weight: 500; }
+  header p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  main { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+
+  .block {
+    margin-top: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .block-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .bnum {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    color: var(--green);
+    background: rgba(135,177,95,0.12);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .btitle {
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--argent);
+  }
+  .block-body { padding: 16px; }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+
+  textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.55;
+    transition: border-color 0.15s;
+  }
+  textarea:focus { border-color: rgba(135,177,95,0.5); }
+  textarea::placeholder { color: var(--hint); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--muted);
+    background: var(--surface2);
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .chip.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
+
+  .timing-extra {
+    display: none;
+    margin-top: 14px;
+    animation: fadein 0.15s ease;
+  }
+  .timing-extra.open { display: block; }
+  @keyframes fadein { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+
+  .energy-row { display: flex; gap: 8px; align-items: center; }
+  .edot {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--hint);
+    transition: all 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .edot.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
+  .elabel { font-size: 12px; color: var(--hint); margin-left: 4px; font-style: italic; }
+
+  .tog-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tog-row:last-of-type { border-bottom: none; }
+  .tog-title { font-size: 14px; color: var(--text); }
+  .tog-sub { font-size: 12px; color: var(--hint); margin-top: 2px; }
+  .sw {
+    width: 40px; height: 22px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    position: relative;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .sw.on { background: var(--green); border-color: var(--green); }
+  .sw::after {
+    content: '';
+    position: absolute;
+    width: 14px; height: 14px;
+    background: var(--hint);
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: all 0.2s;
+  }
+  .sw.on::after { left: 19px; background: var(--black); }
+  .extra { display: none; padding-top: 10px; }
+  .extra.open { display: block; }
+  .divider { height: 1px; background: var(--border); margin: 4px 0 14px; }
+
+  .copy-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 12px 16px;
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    z-index: 20;
+  }
+  .copy-btn {
+    width: 100%; max-width: 480px;
+    display: block; margin: 0 auto;
+    padding: 14px;
+    background: var(--green);
+    color: var(--black);
+    border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+  .copy-btn:hover { background: #98c46e; }
+  .copy-btn:active { transform: scale(0.98); }
+  .copy-btn.done { background: #2e6e14; color: #b8f58b; }
+
+  .result {
+    display: none;
+    margin-top: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .result.open { display: block; }
+  .result-head {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .result-head span { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--green); font-weight: 500; }
+  .result-head small { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--hint); }
+  .result-body {
+    padding: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; line-height: 1.75;
+    color: var(--argent);
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  .toast {
+    position: fixed; bottom: 80px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--green); color: var(--black);
+    font-weight: 500; padding: 9px 22px;
+    border-radius: 20px; font-size: 14px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s; z-index: 99;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (min-width: 520px) {
+    main { padding: 0 24px; }
+    header { padding: 22px 24px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">
+    <svg viewBox="0 0 16 16"><path d="M1 8h3.5v5H1zm4.5-4H10v9H5.5zm4.5 2.5H14V13h-4z"/></svg>
+  </div>
+  <div>
+    <h1>Feedback de clase</h1>
+    <p>CrossFit Metropolitano</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="block">
+    <div class="block-header"><span class="bnum">01</span><span class="btitle">Tipo de clase</span></div>
+    <div class="block-body">
+      <div class="chips" id="tipo">
+        <div class="chip" onclick="chip('tipo',this)">CrossFit</div>
+        <div class="chip" onclick="chip('tipo',this)">HYROX</div>
+        <div class="chip" onclick="chip('tipo',this)">Open Box</div>
+        <div class="chip" onclick="chip('tipo',this)">Academy</div>
+        <div class="chip" onclick="chip('tipo',this)">Otra</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="bnum">02</span><span class="btitle">Cómo fue</span></div>
+    <div class="block-body">
+      <div class="field">
+        <label>Timing</label>
+        <div class="chips" id="timing">
+          <div class="chip" onclick="chipTiming(this,'perfecto')">Perfecto</div>
+          <div class="chip" onclick="chipTiming(this,'falto')">Faltó tiempo</div>
+          <div class="chip" onclick="chipTiming(this,'sobro')">Sobró tiempo</div>
+        </div>
+        <div class="timing-extra" id="tex-falto">
+          <label>¿Cómo lo solucionaste o qué propones?</label>
+          <textarea id="txt-falto" placeholder="Ej: corté el estiramiento, propongo reducir el AMRAP a 10 min..."></textarea>
+        </div>
+        <div class="timing-extra" id="tex-sobro">
+          <label>¿Cómo lo aprovechaste o qué propones?</label>
+          <textarea id="txt-sobro" placeholder="Ej: hicimos ronda extra, propongo añadir un metcon de cierre..."></textarea>
+        </div>
+      </div>
+      <div class="field">
+        <label>Energía del grupo</label>
+        <div class="energy-row">
+          <div class="edot" onclick="energy(1)">1</div>
+          <div class="edot" onclick="energy(2)">2</div>
+          <div class="edot" onclick="energy(3)">3</div>
+          <div class="edot" onclick="energy(4)">4</div>
+          <div class="edot" onclick="energy(5)">5</div>
+          <span class="elabel" id="elabel">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="bnum">03</span><span class="btitle">Cambios e incidencias</span></div>
+    <div class="block-body" style="padding-bottom:4px">
+      <div class="tog-row" onclick="tog('cambio')">
+        <div><div class="tog-title">Modifiqué algo del WOD</div><div class="tog-sub">Ejercicio, carga, tiempo...</div></div>
+        <div class="sw" id="sw-cambio"></div>
+      </div>
+      <div class="extra" id="ex-cambio">
+        <textarea id="txt-cambio" placeholder="¿Qué cambiaste y por qué?"></textarea>
+        <div class="divider"></div>
+      </div>
+      <div class="tog-row" onclick="tog('lesion')">
+        <div><div class="tog-title">Lesión o incidencia</div><div class="tog-sub">Cualquier cosa que el equipo deba saber</div></div>
+        <div class="sw" id="sw-lesion"></div>
+      </div>
+      <div class="extra" id="ex-lesion">
+        <textarea id="txt-lesion" placeholder="Alumno, qué pasó, cómo se gestionó..."></textarea>
+        <div class="divider"></div>
+      </div>
+      <div class="tog-row" onclick="tog('material')">
+        <div><div class="tog-title">Problema con material o box</div><div class="tog-sub">Avería, limpieza, falta de material...</div></div>
+        <div class="sw" id="sw-material"></div>
+      </div>
+      <div class="extra" id="ex-material" style="margin-bottom:12px">
+        <textarea id="txt-material" placeholder="¿Qué falla o qué falta?"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><span class="bnum">04</span><span class="btitle">Notas adicionales</span></div>
+    <div class="block-body">
+      <textarea id="notas" placeholder="Algo que el equipo deba saber, sugerencias, buen momento de la clase..."></textarea>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-head">
+      <span>Listo para pegar</span>
+      <small>WhatsApp · Slack · lo que uses</small>
+    </div>
+    <div class="result-body" id="result-body"></div>
+  </div>
+
+  <div style="height:20px"></div>
+</main>
+
+<div class="copy-bar">
+  <button class="copy-btn" id="copybtn" onclick="generar()">Generar y copiar resumen</button>
+</div>
+
+<div class="toast" id="toast">Copiado al portapapeles ✓</div>
+
+<script>
+  let eVal = 0;
+  const togs = { cambio: false, lesion: false, material: false };
+  let timingVal = '';
+  const eLabels = ['','Muy baja','Baja','Normal','Alta','Muy alta'];
+
+  function chip(group, el) {
+    document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('sel'));
+    el.classList.add('sel');
+  }
+
+  function chipTiming(el, val) {
+    document.querySelectorAll('#timing .chip').forEach(c => c.classList.remove('sel'));
+    el.classList.add('sel');
+    timingVal = val;
+    document.getElementById('tex-falto').classList.toggle('open', val === 'falto');
+    document.getElementById('tex-sobro').classList.toggle('open', val === 'sobro');
+  }
+
+  function energy(n) {
+    eVal = n;
+    document.querySelectorAll('.edot').forEach((d, i) => d.classList.toggle('sel', i < n));
+    document.getElementById('elabel').textContent = eLabels[n];
+  }
+
+  function tog(id) {
+    togs[id] = !togs[id];
+    document.getElementById('sw-' + id).classList.toggle('on', togs[id]);
+    document.getElementById('ex-' + id).classList.toggle('open', togs[id]);
+  }
+
+  function getChip(id) {
+    const s = document.querySelector('#' + id + ' .chip.sel');
+    return s ? s.textContent.trim() : '—';
+  }
+
+  function generar() {
+    const tipo    = getChip('tipo');
+    const timing  = getChip('timing');
+    const energia = eVal ? eVal + '/5 — ' + eLabels[eVal] : '—';
+
+    const txtFalto    = document.getElementById('txt-falto').value.trim();
+    const txtSobro    = document.getElementById('txt-sobro').value.trim();
+    const txtCambio   = document.getElementById('txt-cambio').value.trim();
+    const txtLesion   = document.getElementById('txt-lesion').value.trim();
+    const txtMaterial = document.getElementById('txt-material').value.trim();
+    const notas       = document.getElementById('notas').value.trim();
+
+    let msg = '📋 *FEEDBACK DE CLASE*\n';
+    msg += '━━━━━━━━━━━━━━━━━━━\n';
+    msg += '🏋️ Clase: ' + tipo + '\n';
+    msg += '⏱ Timing: ' + timing + '\n';
+
+    if (timingVal === 'falto' && txtFalto)   msg += '↳ ' + txtFalto + '\n';
+    if (timingVal === 'sobro' && txtSobro)   msg += '↳ ' + txtSobro + '\n';
+
+    msg += '⚡ Energía: ' + energia + '\n';
+
+    if (togs.cambio)   msg += '\n✏️ *Cambios en el WOD*\n' + (txtCambio || 'Sin detalle') + '\n';
+    if (togs.lesion)   msg += '\n🚨 *Incidencia / lesión*\n' + (txtLesion || 'Sin detalle') + '\n';
+    if (togs.material) msg += '\n🔧 *Material / box*\n' + (txtMaterial || 'Sin detalle') + '\n';
+    if (notas)         msg += '\n💬 *Notas*\n' + notas + '\n';
+
+    document.getElementById('result-body').textContent = msg;
+    const r = document.getElementById('result');
+    r.classList.add('open');
+    r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const btn = document.getElementById('copybtn');
+    navigator.clipboard.writeText(msg).then(() => {
+      btn.textContent = '¡Copiado!';
+      btn.classList.add('done');
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+      setTimeout(() => { btn.textContent = 'Generar y copiar resumen'; btn.classList.remove('done'); }, 2500);
+    }).catch(() => {
+      btn.textContent = 'Selecciona el texto de arriba';
+    });
+  }
+</script>
+</body>
+</html>
