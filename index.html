@@ -27,18 +27,14 @@
     padding-bottom: 90px;
   }
   header {
-    padding: 22px 20px 18px;
+    padding: 20px 20px 16px;
     border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: flex; align-items: center; gap: 10px;
   }
   .mark {
     width: 30px; height: 30px;
-    background: var(--green);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    background: var(--green); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .mark svg { width: 16px; height: 16px; fill: var(--black); }
   header h1 { font-size: 15px; font-weight: 500; }
@@ -47,36 +43,68 @@
   main { max-width: 480px; margin: 0 auto; padding: 0 16px; }
 
   .block {
-    margin-top: 18px;
+    margin-top: 16px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
   }
   .block-header {
-    padding: 12px 16px;
+    padding: 11px 16px;
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; gap: 8px;
   }
   .bnum {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; font-weight: 500;
-    color: var(--green);
-    background: rgba(135,177,95,0.12);
-    border-radius: 4px;
-    padding: 2px 6px;
+    font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+    color: var(--green); background: rgba(135,177,95,0.12);
+    border-radius: 4px; padding: 2px 6px;
   }
   .btitle {
     font-size: 12px; font-weight: 500;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--argent);
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--argent);
   }
-  .block-body { padding: 16px; }
+  .block-body { padding: 0; }
 
-  .field { margin-bottom: 14px; }
-  .field:last-child { margin-bottom: 0; }
-  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  /* Rows dentro del bloque */
+  .row {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .row:last-child { border-bottom: none; }
 
+  .row-label {
+    font-size: 12px; color: var(--muted); margin-bottom: 8px;
+  }
+
+  /* Sí / No toggle */
+  .yn { display: flex; gap: 8px; }
+  .yn-btn {
+    padding: 7px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-size: 14px; color: var(--muted);
+    background: var(--surface2);
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .yn-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .yn-btn.sel-si  { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
+  .yn-btn.sel-no  { background: var(--surface2); border-color: rgba(255,255,255,0.25); color: var(--text); font-weight: 500; }
+
+  /* Chips timing */
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    padding: 7px 16px; border-radius: 20px;
+    border: 1px solid var(--border); font-size: 14px;
+    color: var(--muted); background: var(--surface2);
+    cursor: pointer; transition: all 0.12s;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .chip.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
+
+  /* Textarea */
   textarea {
     width: 100%;
     background: var(--surface2);
@@ -85,148 +113,63 @@
     padding: 10px 12px;
     font-size: 14px;
     font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    outline: none;
-    resize: vertical;
-    min-height: 80px;
-    line-height: 1.55;
+    color: var(--text); outline: none;
+    resize: vertical; min-height: 76px; line-height: 1.55;
     transition: border-color 0.15s;
   }
-  textarea:focus { border-color: rgba(135,177,95,0.5); }
+  textarea:focus { border-color: rgba(135,177,95,0.45); }
   textarea::placeholder { color: var(--hint); }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
-  .chip {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--muted);
-    background: var(--surface2);
-    cursor: pointer;
-    transition: all 0.12s;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-  .chip.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
-
-  .timing-extra {
-    display: none;
-    margin-top: 14px;
+  /* Extra campo que aparece al seleccionar Sí o timing */
+  .extra {
+    display: none; margin-top: 10px;
     animation: fadein 0.15s ease;
   }
-  .timing-extra.open { display: block; }
-  @keyframes fadein { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
-
-  .energy-row { display: flex; gap: 8px; align-items: center; }
-  .edot {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    color: var(--hint);
-    transition: all 0.1s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .edot.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
-  .elabel { font-size: 12px; color: var(--hint); margin-left: 4px; font-style: italic; }
-
-  .tog-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 13px 0;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .tog-row:last-of-type { border-bottom: none; }
-  .tog-title { font-size: 14px; color: var(--text); }
-  .tog-sub { font-size: 12px; color: var(--hint); margin-top: 2px; }
-  .sw {
-    width: 40px; height: 22px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    position: relative;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .sw.on { background: var(--green); border-color: var(--green); }
-  .sw::after {
-    content: '';
-    position: absolute;
-    width: 14px; height: 14px;
-    background: var(--hint);
-    border-radius: 50%;
-    top: 3px; left: 3px;
-    transition: all 0.2s;
-  }
-  .sw.on::after { left: 19px; background: var(--black); }
-  .extra { display: none; padding-top: 10px; }
   .extra.open { display: block; }
-  .divider { height: 1px; background: var(--border); margin: 4px 0 14px; }
+  @keyframes fadein { from { opacity:0; transform:translateY(-3px); } to { opacity:1; } }
 
+  /* Botón copiar */
   .copy-bar {
     position: fixed; bottom: 0; left: 0; right: 0;
-    padding: 12px 16px;
-    background: var(--black);
-    border-top: 1px solid var(--border);
-    z-index: 20;
+    padding: 12px 16px; background: var(--black);
+    border-top: 1px solid var(--border); z-index: 20;
   }
   .copy-btn {
-    width: 100%; max-width: 480px;
-    display: block; margin: 0 auto;
-    padding: 14px;
-    background: var(--green);
-    color: var(--black);
+    width: 100%; max-width: 480px; display: block; margin: 0 auto;
+    padding: 14px; background: var(--green); color: var(--black);
     border: none; border-radius: 10px;
-    font-size: 15px; font-weight: 500;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    letter-spacing: 0.01em;
+    font-size: 15px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
   }
   .copy-btn:hover { background: #98c46e; }
   .copy-btn:active { transform: scale(0.98); }
   .copy-btn.done { background: #2e6e14; color: #b8f58b; }
 
+  /* Resultado */
   .result {
-    display: none;
-    margin-top: 18px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
+    display: none; margin-top: 16px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
   }
   .result.open { display: block; }
   .result-head {
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
   }
   .result-head span { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--green); font-weight: 500; }
   .result-head small { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--hint); }
   .result-body {
-    padding: 16px;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px; line-height: 1.75;
-    color: var(--argent);
+    padding: 16px; font-family: 'DM Mono', monospace;
+    font-size: 13px; line-height: 1.75; color: var(--argent);
     white-space: pre-wrap; word-break: break-word;
   }
 
   .toast {
-    position: fixed; bottom: 80px; left: 50%;
-    transform: translateX(-50%);
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
     background: var(--green); color: var(--black);
-    font-weight: 500; padding: 9px 22px;
-    border-radius: 20px; font-size: 14px;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.2s; z-index: 99;
-    white-space: nowrap;
+    font-weight: 500; padding: 9px 22px; border-radius: 20px;
+    font-size: 14px; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s; z-index: 99; white-space: nowrap;
   }
   .toast.show { opacity: 1; }
 
@@ -250,85 +193,145 @@
 
 <main>
 
+  <!-- GENERAL -->
   <div class="block">
-    <div class="block-header"><span class="bnum">01</span><span class="btitle">Tipo de clase</span></div>
+    <div class="block-header"><span class="bnum">01</span><span class="btitle">General</span></div>
     <div class="block-body">
-      <div class="chips" id="tipo">
-        <div class="chip" onclick="chip('tipo',this)">CrossFit</div>
-        <div class="chip" onclick="chip('tipo',this)">HYROX</div>
-        <div class="chip" onclick="chip('tipo',this)">Open Box</div>
-        <div class="chip" onclick="chip('tipo',this)">Academy</div>
-        <div class="chip" onclick="chip('tipo',this)">Otra</div>
-      </div>
-    </div>
-  </div>
 
-  <div class="block">
-    <div class="block-header"><span class="bnum">02</span><span class="btitle">Cómo fue</span></div>
-    <div class="block-body">
-      <div class="field">
-        <label>Timing</label>
+      <div class="row">
+        <div class="row-label">Tipo de clase</div>
+        <div class="chips" id="tipo">
+          <div class="chip" onclick="chip('tipo',this)">CrossFit</div>
+          <div class="chip" onclick="chip('tipo',this)">HYROX</div>
+          <div class="chip" onclick="chip('tipo',this)">Academy</div>
+          <div class="chip" onclick="chip('tipo',this)">Halterofilia</div>
+          <div class="chip" onclick="chip('tipo',this)">Otra</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">¿El espacio cambia con Academy?</div>
+        <div class="yn" id="yn-academy">
+          <div class="yn-btn" onclick="yn('academy','si')">Sí</div>
+          <div class="yn-btn" onclick="yn('academy','no')">No</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Tiempo de la clase</div>
         <div class="chips" id="timing">
-          <div class="chip" onclick="chipTiming(this,'perfecto')">Perfecto</div>
+          <div class="chip" onclick="chipTiming(this,'bien')">Bien de tiempo</div>
           <div class="chip" onclick="chipTiming(this,'falto')">Faltó tiempo</div>
           <div class="chip" onclick="chipTiming(this,'sobro')">Sobró tiempo</div>
         </div>
-        <div class="timing-extra" id="tex-falto">
-          <label>¿Cómo lo solucionaste o qué propones?</label>
-          <textarea id="txt-falto" placeholder="Ej: corté el estiramiento, propongo reducir el AMRAP a 10 min..."></textarea>
+        <div class="extra" id="tex-falto">
+          <textarea id="txt-falto" placeholder="¿Cómo lo solucionaste o qué propones?"></textarea>
         </div>
-        <div class="timing-extra" id="tex-sobro">
-          <label>¿Cómo lo aprovechaste o qué propones?</label>
-          <textarea id="txt-sobro" placeholder="Ej: hicimos ronda extra, propongo añadir un metcon de cierre..."></textarea>
+        <div class="extra" id="tex-sobro">
+          <textarea id="txt-sobro" placeholder="¿Cómo lo aprovechaste o qué propones?"></textarea>
         </div>
       </div>
-      <div class="field">
-        <label>Energía del grupo</label>
-        <div class="energy-row">
-          <div class="edot" onclick="energy(1)">1</div>
-          <div class="edot" onclick="energy(2)">2</div>
-          <div class="edot" onclick="energy(3)">3</div>
-          <div class="edot" onclick="energy(4)">4</div>
-          <div class="edot" onclick="energy(5)">5</div>
-          <span class="elabel" id="elabel">—</span>
+
+      <div class="row">
+        <div class="row-label">¿Errores o aclaraciones en la TV Aimharder?</div>
+        <div class="yn" id="yn-tv">
+          <div class="yn-btn" onclick="yn('tv','si')">Sí</div>
+          <div class="yn-btn" onclick="yn('tv','no')">No</div>
+        </div>
+        <div class="extra" id="ex-tv">
+          <textarea id="txt-tv" placeholder="¿Qué había mal o qué habría que aclarar?"></textarea>
         </div>
       </div>
+
+      <div class="row">
+        <div class="row-label">Otros</div>
+        <textarea id="txt-general-otros" placeholder="Cualquier cosa relevante de la clase en general..."></textarea>
+      </div>
+
     </div>
   </div>
 
+  <!-- FUERZA / SKILLS -->
   <div class="block">
-    <div class="block-header"><span class="bnum">03</span><span class="btitle">Cambios e incidencias</span></div>
-    <div class="block-body" style="padding-bottom:4px">
-      <div class="tog-row" onclick="tog('cambio')">
-        <div><div class="tog-title">Modifiqué algo del WOD</div><div class="tog-sub">Ejercicio, carga, tiempo...</div></div>
-        <div class="sw" id="sw-cambio"></div>
-      </div>
-      <div class="extra" id="ex-cambio">
-        <textarea id="txt-cambio" placeholder="¿Qué cambiaste y por qué?"></textarea>
-        <div class="divider"></div>
-      </div>
-      <div class="tog-row" onclick="tog('lesion')">
-        <div><div class="tog-title">Lesión o incidencia</div><div class="tog-sub">Cualquier cosa que el equipo deba saber</div></div>
-        <div class="sw" id="sw-lesion"></div>
-      </div>
-      <div class="extra" id="ex-lesion">
-        <textarea id="txt-lesion" placeholder="Alumno, qué pasó, cómo se gestionó..."></textarea>
-        <div class="divider"></div>
-      </div>
-      <div class="tog-row" onclick="tog('material')">
-        <div><div class="tog-title">Problema con material o box</div><div class="tog-sub">Avería, limpieza, falta de material...</div></div>
-        <div class="sw" id="sw-material"></div>
-      </div>
-      <div class="extra" id="ex-material" style="margin-bottom:12px">
-        <textarea id="txt-material" placeholder="¿Qué falla o qué falta?"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <div class="block">
-    <div class="block-header"><span class="bnum">04</span><span class="btitle">Notas adicionales</span></div>
+    <div class="block-header"><span class="bnum">02</span><span class="btitle">Fuerza / Skills</span></div>
     <div class="block-body">
-      <textarea id="notas" placeholder="Algo que el equipo deba saber, sugerencias, buen momento de la clase..."></textarea>
+
+      <div class="row">
+        <div class="row-label">¿Comparten material?</div>
+        <div class="yn" id="yn-f-material">
+          <div class="yn-btn" onclick="yn('f-material','si')">Sí</div>
+          <div class="yn-btn" onclick="yn('f-material','no')">No</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Disposición del material en el espacio</div>
+        <textarea id="txt-f-disposicion" placeholder="Cómo estaba organizado el material..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Manera de trabajar</div>
+        <textarea id="txt-f-manera" placeholder="Ej: al compartir barra, uno empieza en un ejercicio y el otro en otro, o los dos empiezan igual y se esperan..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Adaptaciones de ejercicios</div>
+        <textarea id="txt-f-adaptaciones" placeholder="Escalados, sustituciones, modificaciones usadas..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="row-label">¿Se realizaron cambios?</div>
+        <div class="yn" id="yn-f-cambios">
+          <div class="yn-btn" onclick="yn('f-cambios','si')">Sí</div>
+          <div class="yn-btn" onclick="yn('f-cambios','no')">No</div>
+        </div>
+        <div class="extra" id="ex-f-cambios">
+          <textarea id="txt-f-cambios" placeholder="¿Qué se cambió y por qué?"></textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WOD -->
+  <div class="block">
+    <div class="block-header"><span class="bnum">03</span><span class="btitle">WOD</span></div>
+    <div class="block-body">
+
+      <div class="row">
+        <div class="row-label">¿Comparten material?</div>
+        <div class="yn" id="yn-w-material">
+          <div class="yn-btn" onclick="yn('w-material','si')">Sí</div>
+          <div class="yn-btn" onclick="yn('w-material','no')">No</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Disposición del material en el espacio</div>
+        <textarea id="txt-w-disposicion" placeholder="Cómo estaba organizado el material..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Manera de trabajar</div>
+        <textarea id="txt-w-manera" placeholder="Ej: por turnos, en paralelo, formato AMRAP en pareja..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Adaptaciones de ejercicios</div>
+        <textarea id="txt-w-adaptaciones" placeholder="Escalados, sustituciones, modificaciones usadas..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="row-label">¿Se realizaron cambios?</div>
+        <div class="yn" id="yn-w-cambios">
+          <div class="yn-btn" onclick="yn('w-cambios','si')">Sí</div>
+          <div class="yn-btn" onclick="yn('w-cambios','no')">No</div>
+        </div>
+        <div class="extra" id="ex-w-cambios">
+          <textarea id="txt-w-cambios" placeholder="¿Qué se cambió y por qué?"></textarea>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -350,16 +353,17 @@
 <div class="toast" id="toast">Copiado al portapapeles ✓</div>
 
 <script>
-  let eVal = 0;
-  const togs = { cambio: false, lesion: false, material: false };
+  // Estado
+  const ynState = {};
   let timingVal = '';
-  const eLabels = ['','Muy baja','Baja','Normal','Alta','Muy alta'];
 
+  // Chip tipo clase (single select)
   function chip(group, el) {
     document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('sel'));
     el.classList.add('sel');
   }
 
+  // Timing con campos extra
   function chipTiming(el, val) {
     document.querySelectorAll('#timing .chip').forEach(c => c.classList.remove('sel'));
     el.classList.add('sel');
@@ -368,16 +372,17 @@
     document.getElementById('tex-sobro').classList.toggle('open', val === 'sobro');
   }
 
-  function energy(n) {
-    eVal = n;
-    document.querySelectorAll('.edot').forEach((d, i) => d.classList.toggle('sel', i < n));
-    document.getElementById('elabel').textContent = eLabels[n];
-  }
-
-  function tog(id) {
-    togs[id] = !togs[id];
-    document.getElementById('sw-' + id).classList.toggle('on', togs[id]);
-    document.getElementById('ex-' + id).classList.toggle('open', togs[id]);
+  // Sí/No
+  function yn(id, val) {
+    ynState[id] = val;
+    const group = document.getElementById('yn-' + id);
+    group.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('sel-si','sel-no'));
+    const btns = group.querySelectorAll('.yn-btn');
+    btns[0].classList.toggle('sel-si', val === 'si');
+    btns[1].classList.toggle('sel-no', val === 'no');
+    // Mostrar campo extra si existe
+    const ex = document.getElementById('ex-' + id);
+    if (ex) ex.classList.toggle('open', val === 'si');
   }
 
   function getChip(id) {
@@ -385,32 +390,73 @@
     return s ? s.textContent.trim() : '—';
   }
 
+  function getYN(id) {
+    return ynState[id] ? (ynState[id] === 'si' ? 'Sí' : 'No') : '—';
+  }
+
+  function val(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function line(label, value) {
+    return value ? label + ': ' + value + '\n' : '';
+  }
+
   function generar() {
     const tipo    = getChip('tipo');
+    const academy = getYN('academy');
     const timing  = getChip('timing');
-    const energia = eVal ? eVal + '/5 — ' + eLabels[eVal] : '—';
+    const tv      = getYN('tv');
+    const txtTv   = val('txt-tv');
+    const txtFalto = val('txt-falto');
+    const txtSobro = val('txt-sobro');
+    const otros    = val('txt-general-otros');
 
-    const txtFalto    = document.getElementById('txt-falto').value.trim();
-    const txtSobro    = document.getElementById('txt-sobro').value.trim();
-    const txtCambio   = document.getElementById('txt-cambio').value.trim();
-    const txtLesion   = document.getElementById('txt-lesion').value.trim();
-    const txtMaterial = document.getElementById('txt-material').value.trim();
-    const notas       = document.getElementById('notas').value.trim();
+    // Fuerza
+    const fMaterial    = getYN('f-material');
+    const fDisposicion = val('txt-f-disposicion');
+    const fManera      = val('txt-f-manera');
+    const fAdapt       = val('txt-f-adaptaciones');
+    const fCambios     = getYN('f-cambios');
+    const fCambiosTxt  = val('txt-f-cambios');
+
+    // WOD
+    const wMaterial    = getYN('w-material');
+    const wDisposicion = val('txt-w-disposicion');
+    const wManera      = val('txt-w-manera');
+    const wAdapt       = val('txt-w-adaptaciones');
+    const wCambios     = getYN('w-cambios');
+    const wCambiosTxt  = val('txt-w-cambios');
 
     let msg = '📋 *FEEDBACK DE CLASE*\n';
-    msg += '━━━━━━━━━━━━━━━━━━━\n';
-    msg += '🏋️ Clase: ' + tipo + '\n';
-    msg += '⏱ Timing: ' + timing + '\n';
+    msg += '━━━━━━━━━━━━━━━━━━━\n\n';
 
-    if (timingVal === 'falto' && txtFalto)   msg += '↳ ' + txtFalto + '\n';
-    if (timingVal === 'sobro' && txtSobro)   msg += '↳ ' + txtSobro + '\n';
+    msg += '📌 *GENERAL*\n';
+    msg += '• Clase: ' + tipo + '\n';
+    msg += '• Espacio cambia con Academy: ' + academy + '\n';
+    msg += '• Tiempo: ' + timing + '\n';
+    if (timingVal === 'falto' && txtFalto) msg += '  ↳ ' + txtFalto + '\n';
+    if (timingVal === 'sobro' && txtSobro) msg += '  ↳ ' + txtSobro + '\n';
+    msg += '• Errores TV Aimharder: ' + tv + '\n';
+    if (txtTv) msg += '  ↳ ' + txtTv + '\n';
+    if (otros) msg += '• Otros: ' + otros + '\n';
 
-    msg += '⚡ Energía: ' + energia + '\n';
+    msg += '\n💪 *FUERZA / SKILLS*\n';
+    msg += '• Comparten material: ' + fMaterial + '\n';
+    if (fDisposicion) msg += '• Disposición: ' + fDisposicion + '\n';
+    if (fManera)      msg += '• Manera de trabajar: ' + fManera + '\n';
+    if (fAdapt)       msg += '• Adaptaciones: ' + fAdapt + '\n';
+    msg += '• Cambios realizados: ' + fCambios + '\n';
+    if (fCambios === 'Sí' && fCambiosTxt) msg += '  ↳ ' + fCambiosTxt + '\n';
 
-    if (togs.cambio)   msg += '\n✏️ *Cambios en el WOD*\n' + (txtCambio || 'Sin detalle') + '\n';
-    if (togs.lesion)   msg += '\n🚨 *Incidencia / lesión*\n' + (txtLesion || 'Sin detalle') + '\n';
-    if (togs.material) msg += '\n🔧 *Material / box*\n' + (txtMaterial || 'Sin detalle') + '\n';
-    if (notas)         msg += '\n💬 *Notas*\n' + notas + '\n';
+    msg += '\n🏋️ *WOD*\n';
+    msg += '• Comparten material: ' + wMaterial + '\n';
+    if (wDisposicion) msg += '• Disposición: ' + wDisposicion + '\n';
+    if (wManera)      msg += '• Manera de trabajar: ' + wManera + '\n';
+    if (wAdapt)       msg += '• Adaptaciones: ' + wAdapt + '\n';
+    msg += '• Cambios realizados: ' + wCambios + '\n';
+    if (wCambios === 'Sí' && wCambiosTxt) msg += '  ↳ ' + wCambiosTxt + '\n';
 
     document.getElementById('result-body').textContent = msg;
     const r = document.getElementById('result');
