@@ -17,6 +17,7 @@
     --muted: #888;
     --hint: #555;
     --argent: #C4C0BF;
+    --red: #e05555;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -24,7 +25,7 @@
     background: var(--black);
     color: var(--text);
     min-height: 100vh;
-    padding-bottom: 90px;
+    padding-bottom: 100px;
   }
   header {
     padding: 20px 20px 16px;
@@ -41,6 +42,21 @@
   header p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
   main { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+
+  /* Sede selector */
+  .sede-wrap { margin-top: 16px; }
+  .sede-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .sede-selector { display: flex; gap: 8px; }
+  .sede-btn {
+    flex: 1; padding: 13px 8px;
+    border-radius: 10px; border: 1px solid var(--border);
+    font-size: 14px; color: var(--muted); background: var(--surface);
+    cursor: pointer; text-align: center; font-weight: 400;
+    transition: all 0.12s; user-select: none;
+    -webkit-tap-highlight-color: transparent; font-family: 'DM Sans', sans-serif;
+  }
+  .sede-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .sede-btn.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
 
   .block {
     margin-top: 16px;
@@ -65,34 +81,25 @@
   }
   .block-body { padding: 0; }
 
-  /* Rows dentro del bloque */
   .row {
     padding: 13px 16px;
     border-bottom: 1px solid var(--border);
   }
   .row:last-child { border-bottom: none; }
+  .row-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
 
-  .row-label {
-    font-size: 12px; color: var(--muted); margin-bottom: 8px;
-  }
-
-  /* Sí / No toggle */
   .yn { display: flex; gap: 8px; }
   .yn-btn {
-    padding: 7px 20px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    font-size: 14px; color: var(--muted);
-    background: var(--surface2);
-    cursor: pointer;
-    transition: all 0.12s;
+    padding: 7px 20px; border-radius: 20px;
+    border: 1px solid var(--border); font-size: 14px;
+    color: var(--muted); background: var(--surface2);
+    cursor: pointer; transition: all 0.12s;
     user-select: none; -webkit-tap-highlight-color: transparent;
   }
   .yn-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-  .yn-btn.sel-si  { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
-  .yn-btn.sel-no  { background: var(--surface2); border-color: rgba(255,255,255,0.25); color: var(--text); font-weight: 500; }
+  .yn-btn.sel-si { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
+  .yn-btn.sel-no { background: var(--surface2); border-color: rgba(255,255,255,0.25); color: var(--text); font-weight: 500; }
 
-  /* Chips timing */
   .chips { display: flex; flex-wrap: wrap; gap: 7px; }
   .chip {
     padding: 7px 16px; border-radius: 20px;
@@ -104,48 +111,53 @@
   .chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
   .chip.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
 
-  /* Textarea */
   textarea {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text); outline: none;
-    resize: vertical; min-height: 76px; line-height: 1.55;
+    width: 100%; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; font-size: 14px;
+    font-family: 'DM Sans', sans-serif; color: var(--text);
+    outline: none; resize: vertical; min-height: 76px; line-height: 1.55;
     transition: border-color 0.15s;
   }
   textarea:focus { border-color: rgba(135,177,95,0.45); }
   textarea::placeholder { color: var(--hint); }
 
-  /* Extra campo que aparece al seleccionar Sí o timing */
-  .extra {
-    display: none; margin-top: 10px;
-    animation: fadein 0.15s ease;
-  }
+  .extra { display: none; margin-top: 10px; animation: fadein 0.15s ease; }
   .extra.open { display: block; }
   @keyframes fadein { from { opacity:0; transform:translateY(-3px); } to { opacity:1; } }
 
-  /* Botón copiar */
-  .copy-bar {
+  /* Botones de acción */
+  .action-bar {
     position: fixed; bottom: 0; left: 0; right: 0;
     padding: 12px 16px; background: var(--black);
     border-top: 1px solid var(--border); z-index: 20;
+    display: flex; gap: 8px;
   }
-  .copy-btn {
-    width: 100%; max-width: 480px; display: block; margin: 0 auto;
-    padding: 14px; background: var(--green); color: var(--black);
+  .btn {
+    flex: 1; padding: 14px 8px;
     border: none; border-radius: 10px;
-    font-size: 15px; font-weight: 500; font-family: 'DM Sans', sans-serif;
-    cursor: pointer; transition: background 0.15s, transform 0.1s;
+    font-size: 14px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: all 0.15s;
+    max-width: 240px;
   }
-  .copy-btn:hover { background: #98c46e; }
-  .copy-btn:active { transform: scale(0.98); }
-  .copy-btn.done { background: #2e6e14; color: #b8f58b; }
+  .btn-telegram {
+    background: var(--green); color: var(--black); flex: 2;
+  }
+  .btn-telegram:hover { background: #98c46e; }
+  .btn-telegram:active { transform: scale(0.98); }
+  .btn-telegram.sending { background: #5a8a3a; color: #d4f0a0; }
+  .btn-telegram.sent { background: #2e6e14; color: #b8f58b; }
+  .btn-telegram.error { background: var(--red); color: #fff; }
+  .btn-copy {
+    background: var(--surface); color: var(--argent);
+    border: 1px solid var(--border); flex: 1;
+  }
+  .btn-copy:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .btn-copy.done { color: var(--green); border-color: var(--green); }
 
-  /* Resultado */
+  .action-wrap { max-width: 480px; margin: 0 auto; display: flex; gap: 8px; width: 100%; }
+
   .result {
     display: none; margin-top: 16px;
     background: var(--surface); border: 1px solid var(--border);
@@ -165,7 +177,7 @@
   }
 
   .toast {
-    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
     background: var(--green); color: var(--black);
     font-weight: 500; padding: 9px 22px; border-radius: 20px;
     font-size: 14px; opacity: 0; pointer-events: none;
@@ -192,6 +204,16 @@
 </header>
 
 <main>
+
+  <!-- SEDE -->
+  <div class="sede-wrap">
+    <div class="sede-label">Sede</div>
+    <div class="sede-selector">
+      <div class="sede-btn" onclick="sede(this,'getafe')">Getafe</div>
+      <div class="sede-btn" onclick="sede(this,'parla')">Parla</div>
+      <div class="sede-btn" onclick="sede(this,'lasrosas')">Las Rosas</div>
+    </div>
+  </div>
 
   <!-- GENERAL -->
   <div class="block">
@@ -337,8 +359,8 @@
 
   <div class="result" id="result">
     <div class="result-head">
-      <span>Listo para pegar</span>
-      <small>WhatsApp · Slack · lo que uses</small>
+      <span>Enviado a Telegram ✓</span>
+      <small id="result-sede-label"></small>
     </div>
     <div class="result-body" id="result-body"></div>
   </div>
@@ -346,24 +368,38 @@
   <div style="height:20px"></div>
 </main>
 
-<div class="copy-bar">
-  <button class="copy-btn" id="copybtn" onclick="generar()">Generar y copiar resumen</button>
+<div class="action-bar">
+  <div class="action-wrap">
+    <button class="btn btn-telegram" id="btn-telegram" onclick="enviarTelegram()">Enviar a Telegram</button>
+    <button class="btn btn-copy" id="btn-copy" onclick="copiarTexto()">Copiar</button>
+  </div>
 </div>
 
-<div class="toast" id="toast">Copiado al portapapeles ✓</div>
+<div class="toast" id="toast"></div>
 
 <script>
-  // Estado
+  const BOT_TOKEN = '8445897824:AAG_u50zgEGTcNjtbLzB7dOoxmNGU6ZvAx0';
+  const SEDES = {
+    getafe:   { chat_id: '-1002821444288', thread_id: '4',  label: 'Getafe' },
+    parla:    { chat_id: '-1003042706904', thread_id: '17', label: 'Parla' },
+    lasrosas: { chat_id: '-1002962729593', thread_id: '5',  label: 'Las Rosas' },
+  };
+
   const ynState = {};
   let timingVal = '';
+  let sedeVal = '';
 
-  // Chip tipo clase (single select)
+  function sede(el, val) {
+    document.querySelectorAll('.sede-btn').forEach(b => b.classList.remove('sel'));
+    el.classList.add('sel');
+    sedeVal = val;
+  }
+
   function chip(group, el) {
     document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('sel'));
     el.classList.add('sel');
   }
 
-  // Timing con campos extra
   function chipTiming(el, val) {
     document.querySelectorAll('#timing .chip').forEach(c => c.classList.remove('sel'));
     el.classList.add('sel');
@@ -372,7 +408,6 @@
     document.getElementById('tex-sobro').classList.toggle('open', val === 'sobro');
   }
 
-  // Sí/No
   function yn(id, val) {
     ynState[id] = val;
     const group = document.getElementById('yn-' + id);
@@ -380,7 +415,6 @@
     const btns = group.querySelectorAll('.yn-btn');
     btns[0].classList.toggle('sel-si', val === 'si');
     btns[1].classList.toggle('sel-no', val === 'no');
-    // Mostrar campo extra si existe
     const ex = document.getElementById('ex-' + id);
     if (ex) ex.classList.toggle('open', val === 'si');
   }
@@ -399,11 +433,8 @@
     return el ? el.value.trim() : '';
   }
 
-  function line(label, value) {
-    return value ? label + ': ' + value + '\n' : '';
-  }
-
-  function generar() {
+  function construirMensaje() {
+    const sedeName = sedeVal ? SEDES[sedeVal].label : '—';
     const tipo    = getChip('tipo');
     const academy = getYN('academy');
     const timing  = getChip('timing');
@@ -413,7 +444,6 @@
     const txtSobro = val('txt-sobro');
     const otros    = val('txt-general-otros');
 
-    // Fuerza
     const fMaterial    = getYN('f-material');
     const fDisposicion = val('txt-f-disposicion');
     const fManera      = val('txt-f-manera');
@@ -421,7 +451,6 @@
     const fCambios     = getYN('f-cambios');
     const fCambiosTxt  = val('txt-f-cambios');
 
-    // WOD
     const wMaterial    = getYN('w-material');
     const wDisposicion = val('txt-w-disposicion');
     const wManera      = val('txt-w-manera');
@@ -433,6 +462,7 @@
     msg += '━━━━━━━━━━━━━━━━━━━\n\n';
 
     msg += '📌 *GENERAL*\n';
+    msg += '• Sede: ' + sedeName + '\n';
     msg += '• Clase: ' + tipo + '\n';
     msg += '• Espacio cambia con Academy: ' + academy + '\n';
     msg += '• Tiempo: ' + timing + '\n';
@@ -458,22 +488,86 @@
     msg += '• Cambios realizados: ' + wCambios + '\n';
     if (wCambios === 'Sí' && wCambiosTxt) msg += '  ↳ ' + wCambiosTxt + '\n';
 
-    document.getElementById('result-body').textContent = msg;
-    const r = document.getElementById('result');
-    r.classList.add('open');
-    r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return msg;
+  }
 
-    const btn = document.getElementById('copybtn');
+  async function enviarTelegram() {
+    if (!sedeVal) {
+      showToast('⚠️ Selecciona una sede primero', 2500);
+      return;
+    }
+
+    const msg = construirMensaje();
+    const s = SEDES[sedeVal];
+    const btn = document.getElementById('btn-telegram');
+
+    btn.textContent = 'Enviando...';
+    btn.classList.add('sending');
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: s.chat_id,
+          message_thread_id: parseInt(s.thread_id),
+          text: msg,
+          parse_mode: 'Markdown'
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        btn.textContent = '¡Enviado! ✓';
+        btn.classList.remove('sending');
+        btn.classList.add('sent');
+        showToast('Enviado al canal de ' + s.label + ' ✓', 2500);
+
+        document.getElementById('result-sede-label').textContent = s.label;
+        document.getElementById('result-body').textContent = msg;
+        const r = document.getElementById('result');
+        r.classList.add('open');
+        r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        setTimeout(() => {
+          btn.textContent = 'Enviar a Telegram';
+          btn.classList.remove('sent');
+          btn.disabled = false;
+        }, 3000);
+      } else {
+        throw new Error(data.description || 'Error desconocido');
+      }
+    } catch (err) {
+      btn.textContent = 'Error — reintentar';
+      btn.classList.remove('sending');
+      btn.classList.add('error');
+      showToast('Error: ' + err.message, 3000);
+      setTimeout(() => {
+        btn.textContent = 'Enviar a Telegram';
+        btn.classList.remove('error');
+        btn.disabled = false;
+      }, 3000);
+    }
+  }
+
+  function copiarTexto() {
+    const msg = construirMensaje();
+    const btn = document.getElementById('btn-copy');
     navigator.clipboard.writeText(msg).then(() => {
-      btn.textContent = '¡Copiado!';
+      btn.textContent = 'Copiado ✓';
       btn.classList.add('done');
-      const t = document.getElementById('toast');
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2000);
-      setTimeout(() => { btn.textContent = 'Generar y copiar resumen'; btn.classList.remove('done'); }, 2500);
-    }).catch(() => {
-      btn.textContent = 'Selecciona el texto de arriba';
+      showToast('Copiado al portapapeles', 2000);
+      setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('done'); }, 2500);
     });
+  }
+
+  function showToast(msg, duration) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration);
   }
 </script>
 </body>
