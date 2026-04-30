@@ -13,6 +13,7 @@
     --surface: #1c1c1c;
     --surface2: #252525;
     --border: rgba(255,255,255,0.08);
+    --border-error: rgba(224,85,85,0.6);
     --text: #EEE9E9;
     --muted: #888;
     --hint: #555;
@@ -43,7 +44,6 @@
 
   main { max-width: 480px; margin: 0 auto; padding: 0 16px; }
 
-  /* Sede selector */
   .sede-wrap { margin-top: 16px; }
   .sede-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
   .sede-selector { display: flex; gap: 8px; }
@@ -57,6 +57,7 @@
   }
   .sede-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
   .sede-btn.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
+  .sede-wrap.error .sede-selector { border: 1px solid var(--border-error); border-radius: 12px; padding: 4px; }
 
   .block {
     margin-top: 16px;
@@ -64,7 +65,9 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
+    transition: border-color 0.2s;
   }
+  .block.error { border-color: var(--border-error); }
   .block-header {
     padding: 11px 16px;
     border-bottom: 1px solid var(--border);
@@ -79,6 +82,13 @@
     font-size: 12px; font-weight: 500;
     letter-spacing: 0.07em; text-transform: uppercase; color: var(--argent);
   }
+  .berror {
+    margin-left: auto;
+    font-size: 11px; color: var(--red);
+    font-family: 'DM Mono', monospace;
+    display: none;
+  }
+  .block.error .berror { display: block; }
   .block-body { padding: 0; }
 
   .row {
@@ -87,6 +97,18 @@
   }
   .row:last-child { border-bottom: none; }
   .row-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .row-label .req { color: var(--red); margin-left: 2px; }
+
+  input[type=text] {
+    width: 100%; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; font-size: 15px;
+    font-family: 'DM Sans', sans-serif; color: var(--text);
+    outline: none; transition: border-color 0.15s;
+  }
+  input[type=text]:focus { border-color: rgba(135,177,95,0.45); }
+  input[type=text]::placeholder { color: var(--hint); }
+  input[type=text].error { border-color: var(--border-error); }
 
   .yn { display: flex; gap: 8px; }
   .yn-btn {
@@ -110,6 +132,7 @@
   }
   .chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
   .chip.sel { background: var(--green); border-color: var(--green); color: var(--black); font-weight: 500; }
+  .chips.error .chip:not(.sel) { border-color: rgba(224,85,85,0.4); }
 
   textarea {
     width: 100%; background: var(--surface2);
@@ -126,7 +149,49 @@
   .extra.open { display: block; }
   @keyframes fadein { from { opacity:0; transform:translateY(-3px); } to { opacity:1; } }
 
-  /* Botones de acción */
+  /* Modal de confirmación */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 50;
+    align-items: flex-end; justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px; width: 100%; max-width: 480px;
+    animation: slideup 0.2s ease;
+  }
+  @keyframes slideup { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+  .modal-title { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-cancel {
+    flex: 1; padding: 12px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 10px;
+    font-size: 14px; font-weight: 500; color: var(--muted);
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+  }
+  .modal-confirm {
+    flex: 2; padding: 12px; background: var(--green);
+    border: none; border-radius: 10px;
+    font-size: 14px; font-weight: 500; color: var(--black);
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+  }
+  .modal-confirm:hover { background: #98c46e; }
+
+  /* Botón reset */
+  .reset-btn {
+    display: none; width: 100%; max-width: 480px;
+    margin: 16px auto 0; padding: 12px;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 10px; font-size: 14px; color: var(--muted);
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .reset-btn.visible { display: block; }
+
   .action-bar {
     position: fixed; bottom: 0; left: 0; right: 0;
     padding: 12px 16px; background: var(--black);
@@ -139,23 +204,16 @@
     font-size: 14px; font-weight: 500;
     font-family: 'DM Sans', sans-serif;
     cursor: pointer; transition: all 0.15s;
-    max-width: 240px;
   }
-  .btn-telegram {
-    background: var(--green); color: var(--black); flex: 2;
-  }
+  .btn-telegram { background: var(--green); color: var(--black); flex: 2; }
   .btn-telegram:hover { background: #98c46e; }
   .btn-telegram:active { transform: scale(0.98); }
   .btn-telegram.sending { background: #5a8a3a; color: #d4f0a0; }
   .btn-telegram.sent { background: #2e6e14; color: #b8f58b; }
-  .btn-telegram.error { background: var(--red); color: #fff; }
-  .btn-copy {
-    background: var(--surface); color: var(--argent);
-    border: 1px solid var(--border); flex: 1;
-  }
+  .btn-telegram.error-state { background: var(--red); color: #fff; }
+  .btn-copy { background: var(--surface); color: var(--argent); border: 1px solid var(--border); flex: 1; }
   .btn-copy:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
   .btn-copy.done { color: var(--green); border-color: var(--green); }
-
   .action-wrap { max-width: 480px; margin: 0 auto; display: flex; gap: 8px; width: 100%; }
 
   .result {
@@ -206,8 +264,8 @@
 <main>
 
   <!-- SEDE -->
-  <div class="sede-wrap">
-    <div class="sede-label">Sede</div>
+  <div class="sede-wrap" id="sede-wrap">
+    <div class="sede-label">Sede <span style="color:var(--red)">*</span></div>
     <div class="sede-selector">
       <div class="sede-btn" onclick="sede(this,'getafe')">Getafe</div>
       <div class="sede-btn" onclick="sede(this,'parla')">Parla</div>
@@ -216,12 +274,21 @@
   </div>
 
   <!-- GENERAL -->
-  <div class="block">
-    <div class="block-header"><span class="bnum">01</span><span class="btitle">General</span></div>
+  <div class="block" id="block-general">
+    <div class="block-header">
+      <span class="bnum">01</span>
+      <span class="btitle">General</span>
+      <span class="berror">Completa los campos obligatorios</span>
+    </div>
     <div class="block-body">
 
       <div class="row">
-        <div class="row-label">Tipo de clase</div>
+        <div class="row-label">Tu nombre <span class="req">*</span></div>
+        <input type="text" id="coach" placeholder="¿Quién da la clase?">
+      </div>
+
+      <div class="row">
+        <div class="row-label">Tipo de clase <span class="req">*</span></div>
         <div class="chips" id="tipo">
           <div class="chip" onclick="chip('tipo',this)">CrossFit</div>
           <div class="chip" onclick="chip('tipo',this)">HYROX</div>
@@ -293,7 +360,7 @@
 
       <div class="row">
         <div class="row-label">Manera de trabajar</div>
-        <textarea id="txt-f-manera" placeholder="Ej: al compartir barra, uno empieza en un ejercicio y el otro en otro, o los dos empiezan igual y se esperan..."></textarea>
+        <textarea id="txt-f-manera" placeholder="Ej: al compartir barra, uno empieza en un ejercicio y el otro en otro..."></textarea>
       </div>
 
       <div class="row">
@@ -357,6 +424,8 @@
     </div>
   </div>
 
+  <button class="reset-btn" id="reset-btn" onclick="resetForm()">Rellenar otro feedback</button>
+
   <div class="result" id="result">
     <div class="result-head">
       <span>Enviado a Telegram ✓</span>
@@ -368,9 +437,21 @@
   <div style="height:20px"></div>
 </main>
 
+<!-- Modal de confirmación -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">¿Enviar feedback?</div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cerrarModal()">Cancelar</button>
+      <button class="modal-confirm" onclick="confirmarEnvio()">Sí, enviar</button>
+    </div>
+  </div>
+</div>
+
 <div class="action-bar">
   <div class="action-wrap">
-    <button class="btn btn-telegram" id="btn-telegram" onclick="enviarTelegram()">Enviar a Telegram</button>
+    <button class="btn btn-telegram" id="btn-telegram" onclick="abrirModal()">Enviar a Telegram</button>
     <button class="btn btn-copy" id="btn-copy" onclick="copiarTexto()">Copiar</button>
   </div>
 </div>
@@ -389,15 +470,30 @@
   let timingVal = '';
   let sedeVal = '';
 
+  // Mejora 7: recordar sede en la sesión
+  const savedSede = sessionStorage.getItem('sede');
+  if (savedSede) {
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.querySelector(`.sede-btn[onclick*="${savedSede}"]`);
+      if (btn) { btn.classList.add('sel'); sedeVal = savedSede; }
+    });
+  }
+
   function sede(el, val) {
     document.querySelectorAll('.sede-btn').forEach(b => b.classList.remove('sel'));
     el.classList.add('sel');
     sedeVal = val;
+    sessionStorage.setItem('sede', val); // Mejora 7
+    document.getElementById('sede-wrap').classList.remove('error');
   }
 
   function chip(group, el) {
     document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('sel'));
     el.classList.add('sel');
+    if (group === 'tipo') {
+      document.getElementById('block-general').classList.remove('error');
+      document.getElementById('tipo').classList.remove('error');
+    }
   }
 
   function chipTiming(el, val) {
@@ -421,7 +517,7 @@
 
   function getChip(id) {
     const s = document.querySelector('#' + id + ' .chip.sel');
-    return s ? s.textContent.trim() : '—';
+    return s ? s.textContent.trim() : '';
   }
 
   function getYN(id) {
@@ -433,11 +529,48 @@
     return el ? el.value.trim() : '';
   }
 
+  // Mejora 2: validación
+  function validar() {
+    let ok = true;
+    if (!sedeVal) {
+      document.getElementById('sede-wrap').classList.add('error');
+      ok = false;
+    }
+    const coachVal = val('coach');
+    if (!coachVal) {
+      document.getElementById('coach').classList.add('error');
+      document.getElementById('block-general').classList.add('error');
+      ok = false;
+    }
+    const tipoVal = getChip('tipo');
+    if (!tipoVal) {
+      document.getElementById('tipo').classList.add('error');
+      document.getElementById('block-general').classList.add('error');
+      ok = false;
+    }
+    if (!ok) showToast('⚠️ Completa sede, nombre y tipo de clase', 2500);
+    return ok;
+  }
+
+  // Mejora 2: limpiar error al escribir nombre
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('coach').addEventListener('input', function() {
+      this.classList.remove('error');
+      if (val('coach') && getChip('tipo')) document.getElementById('block-general').classList.remove('error');
+    });
+  });
+
   function construirMensaje() {
+    // Mejora 1: timestamp automático
+    const ahora = new Date();
+    const fecha = ahora.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+    const hora  = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
     const sedeName = sedeVal ? SEDES[sedeVal].label : '—';
-    const tipo    = getChip('tipo');
+    const coach   = val('coach') || '—';
+    const tipo    = getChip('tipo') || '—';
     const academy = getYN('academy');
-    const timing  = getChip('timing');
+    const timing  = getChip('timing') || '—';
     const tv      = getYN('tv');
     const txtTv   = val('txt-tv');
     const txtFalto = val('txt-falto');
@@ -463,6 +596,8 @@
 
     msg += '📌 *GENERAL*\n';
     msg += '• Sede: ' + sedeName + '\n';
+    msg += '• Entrenador/a: ' + coach + '\n';
+    msg += '• Fecha: ' + fecha + '  ' + hora + '\n';
     msg += '• Clase: ' + tipo + '\n';
     msg += '• Espacio cambia con Academy: ' + academy + '\n';
     msg += '• Tiempo: ' + timing + '\n';
@@ -491,12 +626,26 @@
     return msg;
   }
 
-  async function enviarTelegram() {
-    if (!sedeVal) {
-      showToast('⚠️ Selecciona una sede primero', 2500);
-      return;
-    }
+  // Mejora 2: modal de confirmación antes de enviar
+  function abrirModal() {
+    if (!validar()) return;
+    const s = SEDES[sedeVal];
+    const coach = val('coach');
+    const tipo = getChip('tipo');
+    const ahora = new Date();
+    const hora = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('modal-title').textContent = '¿Enviar feedback?';
+    document.getElementById('modal-sub').textContent =
+      coach + ' · ' + tipo + ' · ' + s.label + ' · ' + hora;
+    document.getElementById('modal').classList.add('open');
+  }
 
+  function cerrarModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  async function confirmarEnvio() {
+    cerrarModal();
     const msg = construirMensaje();
     const s = SEDES[sedeVal];
     const btn = document.getElementById('btn-telegram');
@@ -531,6 +680,9 @@
         r.classList.add('open');
         r.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
+        // Mejora 3: mostrar botón de reset
+        document.getElementById('reset-btn').classList.add('visible');
+
         setTimeout(() => {
           btn.textContent = 'Enviar a Telegram';
           btn.classList.remove('sent');
@@ -542,17 +694,51 @@
     } catch (err) {
       btn.textContent = 'Error — reintentar';
       btn.classList.remove('sending');
-      btn.classList.add('error');
+      btn.classList.add('error-state');
       showToast('Error: ' + err.message, 3000);
       setTimeout(() => {
         btn.textContent = 'Enviar a Telegram';
-        btn.classList.remove('error');
+        btn.classList.remove('error-state');
         btn.disabled = false;
       }, 3000);
     }
   }
 
+  // Mejora 3: reset del formulario
+  function resetForm() {
+    // Limpiar inputs
+    document.getElementById('coach').value = '';
+    document.getElementById('coach').classList.remove('error');
+    document.querySelectorAll('textarea').forEach(t => t.value = '');
+
+    // Limpiar chips
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+    document.querySelectorAll('.chips').forEach(c => c.classList.remove('error'));
+
+    // Limpiar yn
+    document.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('sel-si','sel-no'));
+    Object.keys(ynState).forEach(k => delete ynState[k]);
+
+    // Limpiar extras
+    document.querySelectorAll('.extra').forEach(e => e.classList.remove('open'));
+
+    // Limpiar errores
+    document.querySelectorAll('.block').forEach(b => b.classList.remove('error'));
+    document.getElementById('sede-wrap').classList.remove('error');
+
+    // Reset timing
+    timingVal = '';
+
+    // Ocultar resultado y reset btn
+    document.getElementById('result').classList.remove('open');
+    document.getElementById('reset-btn').classList.remove('visible');
+
+    // Scroll arriba
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function copiarTexto() {
+    if (!validar()) return;
     const msg = construirMensaje();
     const btn = document.getElementById('btn-copy');
     navigator.clipboard.writeText(msg).then(() => {
