@@ -566,11 +566,11 @@
     const fecha = ahora.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
     const hora  = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
-    const sedeName = sedeVal ? SEDES[sedeVal].label : '—';
-    const coach   = val('coach') || '—';
-    const tipo    = getChip('tipo') || '—';
+    const sedeName = SEDES[sedeVal].label;
+    const coach   = val('coach');
+    const tipo    = getChip('tipo');
     const academy = getYN('academy');
-    const timing  = getChip('timing') || '—';
+    const timing  = getChip('timing');
     const tv      = getYN('tv');
     const txtTv   = val('txt-tv');
     const txtFalto = val('txt-falto');
