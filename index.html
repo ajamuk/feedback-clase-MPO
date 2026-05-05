@@ -521,7 +521,7 @@
   }
 
   function getYN(id) {
-    return ynState[id] ? (ynState[id] === 'si' ? 'Sí' : 'No') : '—';
+    return ynState[id] ? (ynState[id] === 'si' ? 'Sí' : 'No') : '';
   }
 
   function val(id) {
@@ -591,37 +591,39 @@
     const wCambios     = getYN('w-cambios');
     const wCambiosTxt  = val('txt-w-cambios');
 
+    const L = (label, value) => value ? '• ' + label + ': ' + value + '\n' : '';
+
     let msg = '📋 *FEEDBACK DE CLASE*\n';
     msg += '━━━━━━━━━━━━━━━━━━━\n\n';
 
     msg += '📌 *GENERAL*\n';
-    msg += '• Sede: ' + sedeName + '\n';
-    msg += '• Entrenador/a: ' + coach + '\n';
-    msg += '• Fecha: ' + fecha + '  ' + hora + '\n';
-    msg += '• Clase: ' + tipo + '\n';
-    msg += '• Espacio cambia con Academy: ' + academy + '\n';
-    msg += '• Tiempo: ' + timing + '\n';
+    msg += L('Sede', sedeName);
+    msg += L('Entrenador/a', coach);
+    msg += '• ' + fecha + '  ' + hora + '\n';
+    msg += L('Clase', tipo);
+    msg += L('Espacio cambia con Academy', academy);
+    msg += L('Tiempo', timing);
     if (timingVal === 'falto' && txtFalto) msg += '  ↳ ' + txtFalto + '\n';
     if (timingVal === 'sobro' && txtSobro) msg += '  ↳ ' + txtSobro + '\n';
-    msg += '• Errores TV Aimharder: ' + tv + '\n';
-    if (txtTv) msg += '  ↳ ' + txtTv + '\n';
-    if (otros) msg += '• Otros: ' + otros + '\n';
+    msg += L('Errores TV Aimharder', tv);
+    if (tv === 'Sí' && txtTv) msg += '  ↳ ' + txtTv + '\n';
+    msg += L('Otros', otros);
 
-    msg += '\n💪 *FUERZA / SKILLS*\n';
-    msg += '• Comparten material: ' + fMaterial + '\n';
-    if (fDisposicion) msg += '• Disposición: ' + fDisposicion + '\n';
-    if (fManera)      msg += '• Manera de trabajar: ' + fManera + '\n';
-    if (fAdapt)       msg += '• Adaptaciones: ' + fAdapt + '\n';
-    msg += '• Cambios realizados: ' + fCambios + '\n';
-    if (fCambios === 'Sí' && fCambiosTxt) msg += '  ↳ ' + fCambiosTxt + '\n';
+    const fLines = L('Comparten material', fMaterial)
+      + L('Disposición', fDisposicion)
+      + L('Manera de trabajar', fManera)
+      + L('Adaptaciones', fAdapt)
+      + L('Cambios realizados', fCambios)
+      + (fCambios === 'Sí' && fCambiosTxt ? '  ↳ ' + fCambiosTxt + '\n' : '');
+    if (fLines) msg += '\n💪 *FUERZA / SKILLS*\n' + fLines;
 
-    msg += '\n🏋️ *WOD*\n';
-    msg += '• Comparten material: ' + wMaterial + '\n';
-    if (wDisposicion) msg += '• Disposición: ' + wDisposicion + '\n';
-    if (wManera)      msg += '• Manera de trabajar: ' + wManera + '\n';
-    if (wAdapt)       msg += '• Adaptaciones: ' + wAdapt + '\n';
-    msg += '• Cambios realizados: ' + wCambios + '\n';
-    if (wCambios === 'Sí' && wCambiosTxt) msg += '  ↳ ' + wCambiosTxt + '\n';
+    const wLines = L('Comparten material', wMaterial)
+      + L('Disposición', wDisposicion)
+      + L('Manera de trabajar', wManera)
+      + L('Adaptaciones', wAdapt)
+      + L('Cambios realizados', wCambios)
+      + (wCambios === 'Sí' && wCambiosTxt ? '  ↳ ' + wCambiosTxt + '\n' : '');
+    if (wLines) msg += '\n🏋️ *WOD*\n' + wLines;
 
     return msg;
   }
